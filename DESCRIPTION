@@ -21,3 +21,6 @@ Imports:
     nabor
 URL: https://github.com/stevenpawley/mlr3spatialops
 BugReports: https://github.com/stevenpawley/mlr3spatialops/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

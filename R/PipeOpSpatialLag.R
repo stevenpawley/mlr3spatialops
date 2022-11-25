@@ -2,7 +2,9 @@
 #'
 #' @description
 #' Adds new variables based on the weighted aggregation of the target variable
-#' of neighbouring observations.
+#' of neighbouring observations. The closest neighbours are determined based on
+#' the available features set by 'affect_columns' using the `nabors` package for
+#' fast KNN queries.
 #'
 #' @return An `PipeOpSpatialLag` object.
 #' @export
@@ -30,12 +32,15 @@ PipeOpSpatialLag = R6::R6Class(
     #' @param param_vals named list of hyperparameters.
     #' @return A new `PipeOpSpatialLag` object.
     initialize =
-      function(id = 'lag', param_vals = list(k = 5, kernel = 'gaussian')) {
+      function(id = 'lag', param_vals = list()) {
         ps = ParamSet$new(params = list(
-          ParamInt$new('k', default = 5, lower = 1, tags = c('train', 'k')),
+          ParamInt$new('k', default = 5, lower = 3, upper = Inf, tags = 'train'),
           ParamFct$new('kernel', default = 'inv',
-                       levels = c('inv', 'rectangular', 'gaussian'))
+                       levels = c('inv', 'rectangular', 'gaussian'),
+                       tags = 'train', )
         ))
+
+        ps$values = list(k = 5, kernel = 'inv')
 
         super$initialize(
           id,
@@ -69,8 +74,8 @@ PipeOpSpatialLag = R6::R6Class(
 
     knn_train = function(target_name, feature_names, x, y, k,
                          weight_func, type) {
-      train_data = x[, ..feature_names]
-      query_data = y[, ..feature_names]
+      train_data = x[, (feature_names)]
+      query_data = y[, (feature_names)]
 
       if (identical(train_data, query_data)) {
         nn = nabor::knn(data = train_data, query = query_data, k = k + 1)
@@ -118,6 +123,9 @@ PipeOpSpatialLag = R6::R6Class(
 
     .transform = function(task) {
       output_task = task
+
+      stopifnot(!is.null(self$param_set$values$kernel))
+      stopifnot(!is.na(self$param_set$values$kernel))
 
       new_x = private$knn_train(
         target_name = task$target_names,

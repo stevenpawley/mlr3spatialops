@@ -19,3 +19,5 @@ Imports:
     data.table,
     mlr3,
     nabor
+URL: https://github.com/stevenpawley/mlr3spatialops
+BugReports: https://github.com/stevenpawley/mlr3spatialops/issues

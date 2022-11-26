@@ -74,8 +74,8 @@ PipeOpSpatialLag = R6::R6Class(
 
     knn_train = function(target_name, feature_names, x, y, k,
                          weight_func, type) {
-      train_data = x[, (feature_names)]
-      query_data = y[, (feature_names)]
+      train_data = x[, .SD, .SDcols = feature_names]
+      query_data = y[, .SD, .SDcols = feature_names]
 
       if (identical(train_data, query_data)) {
         nn = nabor::knn(data = train_data, query = query_data, k = k + 1)
@@ -118,7 +118,8 @@ PipeOpSpatialLag = R6::R6Class(
 
       new_feature_name = paste(target_name, 'lag', k, weight_func, sep = '_')
       fitted = as.data.table(fitted)
-      setNames(fitted, new_feature_name)
+      data.table::setnames(fitted, new_feature_name)
+      return(fitted)
     },
 
     .transform = function(task) {

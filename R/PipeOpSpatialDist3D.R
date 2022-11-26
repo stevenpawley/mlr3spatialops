@@ -69,7 +69,7 @@ PipeOpSpatialDist3D = R6::R6Class(
 
       if (isFALSE(self$param_set$values$minimum)) {
         dist_vals = private$geo_dist_3d_calc(
-          df = task$data()[, (cols)],
+          df = task$data()[, .SD, .SDcols = cols],
           a = self$state$ref_lat,
           b = self$state$ref_lon,
           c = self$state$ref_depth
@@ -83,7 +83,7 @@ PipeOpSpatialDist3D = R6::R6Class(
         )
         nn = nabor::knn(
           data = as.matrix(refs),
-          query = as.matrix(task$data()[, (cols)]),
+          query = as.matrix(task$data()[, .SD, .SDcols = cols]),
           k = 1
         )
         dist_vals <- as.numeric(nn$nn.dists)
@@ -91,12 +91,13 @@ PipeOpSpatialDist3D = R6::R6Class(
 
       if (inherits(dist_vals, "numeric")) {
         dist_vals = data.table(dist_vals)
-        data.table::setnames(dist_vals, names(dist_vals),
-                             self$param_set$values$prefix)
+        data.table::setnames(dist_vals, self$param_set$values$prefix)
       } else if (inherits(dist_vals, "matrix")) {
         dist_vals = as.data.table(t(dist_vals))
-        data.table::setnames(dist_vals, names(dist_vals),
-                             paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals))))
+        data.table::setnames(
+          dist_vals,
+          paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals)))
+        )
       }
 
       task$cbind(dist_vals)

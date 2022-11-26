@@ -45,7 +45,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
   private = list(
     .get_state = function(task) {
       # create cluster centroids on train
-      train_df = task$data()[, (task$feature_names)]
+      train_df = task$data()[, .SD, .SDcols = task$feature_names]
       km = kmeans(train_df, centers = self$param_set$values$k)
       centers = as.data.table(km$centers)
 
@@ -69,7 +69,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
       )
 
       dist_vals = private$geo_dist_3d_calc(
-        df = task$data()[, (cols)],
+        df = task$data()[, .SD, .SDcols = cols],
         a = self$state$ref_lat,
         b = self$state$ref_lon,
         c = self$state$ref_depth
@@ -77,17 +77,14 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
 
       if (inherits(dist_vals, "numeric")) {
         dist_vals = data.table(dist_vals)
-
-        data.table::setnames(dist_vals,
-                             names(dist_vals),
-                             self$param_set$values$prefix)
+        data.table::setnames(dist_vals, self$param_set$values$prefix)
 
       } else if (inherits(dist_vals, "matrix")) {
         dist_vals = as.data.table(t(dist_vals))
-
-        data.table::setnames(dist_vals,
-                             names(dist_vals),
-                             paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals))))
+        data.table::setnames(
+          dist_vals,
+          paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals)))
+        )
       }
 
       task$cbind(dist_vals)

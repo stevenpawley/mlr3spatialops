@@ -51,7 +51,7 @@ PipeOpSpatialDistCluster = R6::R6Class(
     .get_state = function(task) {
       # create cluster centroids on training
       cols = c(self$param_set$values$lat, self$param_set$values$lon)
-      train_df = task$data()[, (cols)]
+      train_df = task$data()[, .SD, .SDcols = cols]
       km = kmeans(train_df, centers = self$param_set$values$k)
       centers = as.data.table(km$centers)
       list(
@@ -72,22 +72,18 @@ PipeOpSpatialDistCluster = R6::R6Class(
       cols = c(self$param_set$values$lat, self$param_set$values$lon)
 
       dist_vals = geo_dist_2d_calc(
-        df = task$data()[, (cols)],
+        df = task$data()[, .SD, .SDcols = cols],
         a = self$state$ref_lat,
         b = self$state$ref_lon
       )
 
       if (inherits(dist_vals, 'numeric')) {
         dist_vals = data.table(dist_vals)
-        data.table::setnames(
-          dist_vals, names(dist_vals),
-          self$param_set$values$prefix
-        )
+        data.table::setnames(dist_vals, self$param_set$values$prefix)
       } else if (inherits(dist_vals, 'matrix')) {
         dist_vals = as.data.table(t(dist_vals))
         data.table::setnames(
           dist_vals,
-          names(dist_vals),
           paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals)))
         )
       }

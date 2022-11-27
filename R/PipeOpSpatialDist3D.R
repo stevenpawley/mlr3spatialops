@@ -5,17 +5,6 @@
 #'
 #' @return a `PipeOpSpatialDist3D` R6 class object
 #' @export
-#'
-#' @examples
-#' library(mlr3)
-#' library(mlr3pipelines)
-#'
-#' task = tsk('boston_housing')
-#' pop = PipeOpSpatialDist3D$new()
-#' pop$param_set$values$lat = 'lat'
-#' pop$param_set$values$lon = 'lon'
-#' pop$train(list(task))
-#' pop$predict(list(task))[[1]]$data()
 PipeOpSpatialDist3D = R6::R6Class(
   "PipeOpSpatialDist3D",
   inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
@@ -95,7 +84,7 @@ PipeOpSpatialDist3D = R6::R6Class(
 
       if (isFALSE(self$param_set$values$minimum)) {
         dist_vals = private$geo_dist_3d_calc(
-          df = task$data()[, .SD, .SDcols = cols],
+          df = task$data()[, data.table::.SD, .SDcols = cols],
           a = self$state$ref_lat,
           b = self$state$ref_lon,
           c = self$state$ref_depth
@@ -109,7 +98,7 @@ PipeOpSpatialDist3D = R6::R6Class(
         )
         nn = nabor::knn(
           data = as.matrix(refs),
-          query = as.matrix(task$data()[, .SD, .SDcols = cols]),
+          query = as.matrix(task$data()[, data.table::.SD, .SDcols = cols]),
           k = 1
         )
         dist_vals <- as.numeric(nn$nn.dists)

@@ -57,8 +57,8 @@ PipeOpSpatialNeighbours = R6::R6Class(
     },
 
     get_neighbours = function(target_name, feature_names, train, query, k = 5) {
-      train_X = train[, .SD, .SDcols = feature_names]
-      query_X = query[, .SD, .SDcols = feature_names]
+      train_X = train[, data.table::.SD, .SDcols = feature_names]
+      query_X = query[, data.table::.SD, .SDcols = feature_names]
 
       if (identical(train_X, query_X)) {
         nn = nabor::knn(data = train_X, query = query_X, k = k + 1)

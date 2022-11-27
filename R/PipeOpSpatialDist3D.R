@@ -84,7 +84,7 @@ PipeOpSpatialDist3D = R6::R6Class(
 
       if (isFALSE(self$param_set$values$minimum)) {
         dist_vals = private$geo_dist_3d_calc(
-          df = task$data()[, data.table::.SD, .SDcols = cols],
+          df = task$data()[, cols],
           a = self$state$ref_lat,
           b = self$state$ref_lon,
           c = self$state$ref_depth
@@ -98,7 +98,7 @@ PipeOpSpatialDist3D = R6::R6Class(
         )
         nn = nabor::knn(
           data = as.matrix(refs),
-          query = as.matrix(task$data()[, data.table::.SD, .SDcols = cols]),
+          query = as.matrix(task$data()[, cols]),
           k = 1
         )
         dist_vals <- as.numeric(nn$nn.dists)

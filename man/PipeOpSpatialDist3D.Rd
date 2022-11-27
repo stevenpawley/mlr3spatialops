@@ -9,17 +9,6 @@ a `PipeOpSpatialDist3D` R6 class object
 \description{
 Adds new variables based on the 3D Euclidean distances to reference locations.
 }
-\examples{
-library(mlr3)
-library(mlr3pipelines)
-
-task = tsk('boston_housing')
-pop = PipeOpSpatialDist3D$new()
-pop$param_set$values$lat = 'lat'
-pop$param_set$values$lon = 'lon'
-pop$train(list(task))
-pop$predict(list(task))[[1]]$data()
-}
 \section{Super classes}{
 \code{\link[mlr3pipelines:PipeOp]{mlr3pipelines::PipeOp}} -> \code{\link[mlr3pipelines:PipeOpTaskPreproc]{mlr3pipelines::PipeOpTaskPreproc}} -> \code{\link[mlr3pipelines:PipeOpTaskPreprocSimple]{mlr3pipelines::PipeOpTaskPreprocSimple}} -> \code{PipeOpSpatialDist3D}
 }

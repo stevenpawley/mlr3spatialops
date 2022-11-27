@@ -59,7 +59,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
   private = list(
     .get_state = function(task) {
       # create cluster centroids on train
-      train_df = task$data()[, data.table::.SD, .SDcols = task$feature_names]
+      train_df = task$data()[, task$feature_names]
       km = kmeans(train_df, centers = self$param_set$values$k)
       centers = as.data.table(km$centers)
 
@@ -85,7 +85,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
       )
 
       dist_vals = private$geo_dist_3d_calc(
-        df = task$data()[, data.table::.SD, .SDcols = cols],
+        df = task$data()[, cols],
         a = self$state$ref_lat,
         b = self$state$ref_lon,
         c = self$state$ref_depth

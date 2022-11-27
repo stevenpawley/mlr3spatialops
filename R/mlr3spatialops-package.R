@@ -2,11 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom mlr3pipelines PipeOpTaskPreprocSimple
-#' @importFrom paradox ParamDbl
-#' @importFrom paradox ParamFct
-#' @importFrom paradox ParamInt
-#' @importFrom paradox ParamSet
-#' @importFrom data.table .SD data.table
+#' @importFrom data.table data.table as.data.table
 ## usethis namespace: end
 NULL

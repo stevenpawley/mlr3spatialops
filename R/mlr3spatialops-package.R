@@ -7,5 +7,6 @@
 #' @importFrom paradox ParamFct
 #' @importFrom paradox ParamInt
 #' @importFrom paradox ParamSet
+#' @importFrom data.table .SD data.table
 ## usethis namespace: end
 NULL

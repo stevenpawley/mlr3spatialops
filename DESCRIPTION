@@ -11,14 +11,15 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.2
 Depends:
-    mlr3pipelines,
-    paradox,
-    R6
+    data.table
 Imports: 
     collapse,
     data.table,
     mlr3,
-    nabor
+    mlr3pipelines,
+    nabor,
+    paradox,
+    R6
 URL: https://github.com/stevenpawley/mlr3spatialops
 BugReports: https://github.com/stevenpawley/mlr3spatialops/issues
 Suggests: 

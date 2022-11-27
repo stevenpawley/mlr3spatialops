@@ -22,7 +22,7 @@
 #' pop$predict(list(task))$output$data()
 PipeOpSpatialNeighbours = R6::R6Class(
   'PipeOpSpatialNeighbours',
-  inherit = PipeOpTaskPreprocSimple,
+  inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
   public = list(
 
     #' @description
@@ -32,11 +32,12 @@ PipeOpSpatialNeighbours = R6::R6Class(
     #' @return A new `PipeOpSpatialNeighbours` object.
     initialize =
       function(id = 'neighbours', param_vals = list(k = 5)) {
-        ps = ParamSet$new(
-          params = list(
-            ParamInt$new('k', default = 5, lower = 1, tags = c('train', 'k'))
-          )
-        )
+        ps = paradox::ParamSet$new(params = list(paradox::ParamInt$new(
+          id = 'k',
+          default = 5,
+          lower = 1,
+          tags = c('train', 'k')
+        )))
 
       super$initialize(
         id,

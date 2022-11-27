@@ -20,7 +20,7 @@
 #' pop$predict(list(task))[[1]]$data()
 PipeOpSpatialDistCluster = R6::R6Class(
   'PipeOpSpatialDistCluster',
-  inherit = PipeOpTaskPreprocSimple,
+  inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
 
   public = list(
 
@@ -32,12 +32,28 @@ PipeOpSpatialDistCluster = R6::R6Class(
     initialize =
       function(id = 'spatialdist_cluster',
                param_vals = list(prefix = 'geodist', k = 5)) {
-        ps = ParamSet$new(params = list(
-          ParamUty$new('lat', tags = c('train', 'predict', 'required')),
-          ParamUty$new('lon', tags = c('train', 'predict', 'required')),
-          ParamUty$new('k', tags = c('train', 'predict', 'required')),
-          ParamUty$new('prefix', tags = c('train', 'predict'), default = 'geodist')
-        ))
+        ps = paradox::ParamSet$new(
+          params = list(
+            paradox::ParamUty$new(
+              id = 'lat',
+              tags = c('train', 'predict', 'required')
+            ),
+            paradox::ParamUty$new(
+              id = 'lon',
+              tags = c('train', 'predict', 'required')
+            ),
+            paradox::ParamUty$new(
+              id = 'k',
+              tags = c('train', 'predict', 'required')
+            ),
+            paradox::ParamUty$new(
+              id = 'prefix',
+              tags = c('train', 'predict'),
+              default = 'geodist'
+            )
+          )
+        )
+
         super$initialize(
           id,
           param_set = ps,
@@ -54,10 +70,13 @@ PipeOpSpatialDistCluster = R6::R6Class(
       train_df = task$data()[, .SD, .SDcols = cols]
       km = kmeans(train_df, centers = self$param_set$values$k)
       centers = as.data.table(km$centers)
-      list(
+
+      refs = list(
         ref_lat = centers[[self$param_set$values$lat]],
         ref_lon = centers[[self$param_set$values$lon]]
       )
+
+      return(refs)
     },
 
     .transform = function(task) {

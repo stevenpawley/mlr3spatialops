@@ -8,7 +8,9 @@ An `PipeOpSpatialLag` object.
 }
 \description{
 Adds new variables based on the weighted aggregation of the target variable
-of neighbouring observations.
+of neighbouring observations. The closest neighbours are determined based on
+the available features set by 'affect_columns' using the `nabors` package for
+fast KNN queries.
 }
 \examples{
 library(data.table)
@@ -48,7 +50,7 @@ pop$predict(list(task))$output$data()
 \subsection{Method \code{new()}}{
 Create a new PipeOpSpatialLag object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PipeOpSpatialLag$new(id = "lag", param_vals = list(k = 5, kernel = "gaussian"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PipeOpSpatialLag$new(id = "lag", param_vals = list())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

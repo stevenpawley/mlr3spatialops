@@ -8,11 +8,9 @@
 #'
 #' @return a `PipeOpSpatialDistCluster3D` object.
 #' @export
-#'
-#' @examples
 PipeOpSpatialDistCluster3D = R6::R6Class(
   "PipeOpGeodist3DCluster3D",
-  inherit = PipeOpTaskPreprocSimple,
+  inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
   public = list(
 
     #' @description
@@ -23,13 +21,29 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
     initialize =
       function(id = "geodist_3dcluster",
                param_vals = list(k = 10, prefix = "geodist")) {
-        ps = ParamSet$new(
+        ps = paradox::ParamSet$new(
           params = list(
-            ParamUty$new("lat", tags = c("train", "predict", "required")),
-            ParamUty$new("lon", tags = c("train", "predict", "required")),
-            ParamUty$new("depth", tags = c("train", "predict", "required")),
-            ParamUty$new("k", tags = c("train", "predict", "required")),
-            ParamUty$new("prefix", tags = c("train", "predict"), default = "geodist")
+            paradox::ParamUty$new(
+              id = "lat",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "lon",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "depth",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "k",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "prefix",
+              tags = c("train", "predict"),
+              default = "geodist"
+            )
           )
         )
 
@@ -49,9 +63,11 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
       km = kmeans(train_df, centers = self$param_set$values$k)
       centers = as.data.table(km$centers)
 
-      list(ref_lat = centers[[self$param_set$values$lat]],
-           ref_lon = centers[[self$param_set$values$lon]],
-           ref_depth = centers[[self$param_set$values$depth]])
+      refs = list(ref_lat = centers[[self$param_set$values$lat]],
+                  ref_lon = centers[[self$param_set$values$lon]],
+                  ref_depth = centers[[self$param_set$values$depth]])
+
+      return(refs)
     },
 
     geo_dist_3d_calc = function(x, a, b, c) {

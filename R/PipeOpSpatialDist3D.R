@@ -18,7 +18,7 @@
 #' pop$predict(list(task))[[1]]$data()
 PipeOpSpatialDist3D = R6::R6Class(
   "PipeOpSpatialDist3D",
-  inherit = PipeOpTaskPreprocSimple,
+  inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
 
   public = list(
 
@@ -30,16 +30,42 @@ PipeOpSpatialDist3D = R6::R6Class(
     initialize =
       function(id = "geodist3d",
                param_vals = list(prefix = "geodist", minimum = TRUE)) {
-        ps = ParamSet$new(
+        ps = paradox::ParamSet$new(
           params = list(
-            ParamUty$new("lat", tags = c("train", "predict", "required")),
-            ParamUty$new("lon", tags = c("train", "predict", "required")),
-            ParamUty$new("depth", tags = c("train", "predict", "required")),
-            ParamUty$new("ref_lat", tags = c("train", "predict", "required")),
-            ParamUty$new("ref_lon", tags = c("train", "predict", "required")),
-            ParamUty$new("ref_depth", tags = c("train", "predict", "required")),
-            ParamLgl$new("minimum", tags = c("train", "predict", "required"), default = TRUE),
-            ParamUty$new("prefix", tags = c("train", "predict"), default = "geodist")
+            paradox::ParamUty$new(
+              id = "lat",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "lon",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "depth",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "ref_lat",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "ref_lon",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamUty$new(
+              id = "ref_depth",
+              tags = c("train", "predict", "required")
+            ),
+            paradox::ParamLgl$new(
+              id = "minimum",
+              tags = c("train", "predict", "required"),
+              default = TRUE
+            ),
+            paradox::ParamUty$new(
+              id = "prefix",
+              tags = c("train", "predict"),
+              default = "geodist"
+            )
           )
         )
 

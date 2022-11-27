@@ -22,7 +22,7 @@
 #' pop$predict(list(task))$output$data()
 PipeOpSpatialLag = R6::R6Class(
   classname = 'PipeOpSpatialLag',
-  inherit = PipeOpTaskPreprocSimple,
+  inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
 
   public = list(
 
@@ -33,11 +33,20 @@ PipeOpSpatialLag = R6::R6Class(
     #' @return A new `PipeOpSpatialLag` object.
     initialize =
       function(id = 'lag', param_vals = list()) {
-        ps = ParamSet$new(params = list(
-          ParamInt$new('k', default = 5, lower = 3, upper = Inf, tags = 'train'),
-          ParamFct$new('kernel', default = 'inv',
-                       levels = c('inv', 'rectangular', 'gaussian'),
-                       tags = 'train', )
+        ps = paradox::ParamSet$new(params = list(
+          paradox::ParamInt$new(
+            id = 'k',
+            default = 5,
+            lower = 3,
+            upper = Inf,
+            tags = 'train'
+          ),
+          paradox::ParamFct$new(
+            id = 'kernel',
+            default = 'inv',
+            levels = c('inv', 'rectangular', 'gaussian'),
+            tags = 'train'
+          )
         ))
 
         ps$values = list(k = 5, kernel = 'inv')

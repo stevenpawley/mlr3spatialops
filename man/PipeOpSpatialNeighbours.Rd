@@ -7,8 +7,10 @@
 a`PipeOpSpatialNeighbours` object.
 }
 \description{
-Adds new variables based on the the target variable of neighbouring
-observations.
+Adds new variables based on the the target variable of k-nearest neighbouring
+observations. The closest neighbours are determined based on the available
+features set by 'affect_columns' using the `nabors` package for fast
+KNN queries.
 }
 \examples{
 library(data.table)

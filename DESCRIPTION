@@ -6,20 +6,21 @@ Author: Steven Pawley
 Maintainer: Steven Pawley <dr.stevenpawley@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.2
-Imports:
+URL: https://github.com/stevenpawley/mlr3spatialops
+BugReports: https://github.com/stevenpawley/mlr3spatialops/issues
+Depends:
+    R (>= 3.1.0)
+Suggests: 
+    testthat (>= 3.0.0),
+    nabor
+Config/testthat/edition: 3
+Imports: 
     collapse,
     data.table,
     mlr3,
     mlr3pipelines,
-    nabor,
-    paradox,
     R6
-URL: https://github.com/stevenpawley/mlr3spatialops
-BugReports: https://github.com/stevenpawley/mlr3spatialops/issues
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3

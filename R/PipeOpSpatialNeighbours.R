@@ -83,8 +83,8 @@ PipeOpSpatialNeighbours = R6::R6Class(
       colnames(dists) =
         paste(prefix_dist, seq_len(ncol(dists)), sep = '_')
 
-      nn_target_values = as.data.table(nn_target_values)
-      dists = as.data.table(dists)
+      nn_target_values = data.table::as.data.table(nn_target_values)
+      dists = data.table::as.data.table(dists)
 
       return(cbind(nn_target_values, dists))
     },

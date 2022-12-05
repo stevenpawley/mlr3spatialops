@@ -61,7 +61,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
       # create cluster centroids on train
       train_df = task$data()[, task$feature_names]
       km = kmeans(train_df, centers = self$param_set$values$k)
-      centers = as.data.table(km$centers)
+      centers = data.table::as.data.table(km$centers)
 
       refs = list(ref_lat = centers[[self$param_set$values$lat]],
                   ref_lon = centers[[self$param_set$values$lon]],
@@ -96,7 +96,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
         data.table::setnames(dist_vals, self$param_set$values$prefix)
 
       } else if (inherits(dist_vals, "matrix")) {
-        dist_vals = as.data.table(t(dist_vals))
+        dist_vals = data.table::as.data.table(t(dist_vals))
         data.table::setnames(
           dist_vals,
           paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals)))

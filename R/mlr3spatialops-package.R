@@ -12,8 +12,6 @@
 #' @importFrom data.table .NGRP
 #' @importFrom data.table .SD
 #' @importFrom data.table data.table
-#' @importFrom data.table setnames
-#' @importFrom data.table data.table as.data.table
 #' @importFrom mlr3pipelines PipeOpTaskPreprocSimple
 #' @importFrom nabor knn
 ## usethis namespace: end

@@ -108,7 +108,7 @@ PipeOpSpatialDist3D = R6::R6Class(
         dist_vals = data.table(dist_vals)
         data.table::setnames(dist_vals, self$param_set$values$prefix)
       } else if (inherits(dist_vals, "matrix")) {
-        dist_vals = as.data.table(t(dist_vals))
+        dist_vals = data.table::as.data.table(t(dist_vals))
         data.table::setnames(
           dist_vals,
           paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals)))

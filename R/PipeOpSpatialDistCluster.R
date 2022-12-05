@@ -69,7 +69,7 @@ PipeOpSpatialDistCluster = R6::R6Class(
       cols = c(self$param_set$values$lat, self$param_set$values$lon)
       train_df = task$data()[, cols]
       km = kmeans(train_df, centers = self$param_set$values$k)
-      centers = as.data.table(km$centers)
+      centers = data.table::as.data.table(km$centers)
 
       refs = list(
         ref_lat = centers[[self$param_set$values$lat]],
@@ -100,7 +100,7 @@ PipeOpSpatialDistCluster = R6::R6Class(
         dist_vals = data.table(dist_vals)
         data.table::setnames(dist_vals, self$param_set$values$prefix)
       } else if (inherits(dist_vals, 'matrix')) {
-        dist_vals = as.data.table(t(dist_vals))
+        dist_vals = data.table::as.data.table(t(dist_vals))
         data.table::setnames(
           dist_vals,
           paste0(self$param_set$values$prefix, seq_len(ncol(dist_vals)))

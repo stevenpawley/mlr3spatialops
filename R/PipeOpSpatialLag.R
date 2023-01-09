@@ -46,10 +46,14 @@ PipeOpSpatialLag = R6::R6Class(
             default = 'inv',
             levels = c('inv', 'rectangular', 'gaussian'),
             tags = 'train'
+          ),
+          paradox::ParamUty$new(
+            id = 'prefix',
+            default = 'lag'
           )
         ))
 
-        ps$values = list(k = 5, kernel = 'inv')
+        ps$values = list(k = 5, kernel = 'inv', prefix = 'lag')
 
         super$initialize(
           id,
@@ -82,7 +86,7 @@ PipeOpSpatialLag = R6::R6Class(
     },
 
     knn_train = function(target_name, feature_names, x, y, k,
-                         weight_func, type) {
+                         weight_func, type, prefix) {
       train_data = x[, feature_names]
       query_data = y[, feature_names]
 
@@ -125,7 +129,7 @@ PipeOpSpatialLag = R6::R6Class(
         fitted = factor(fitted, levels = levels(x[[target_name]]))
       }
 
-      new_feature_name = paste(target_name, 'lag', k, weight_func, sep = '_')
+      new_feature_name = paste(prefix, target_name, k, weight_func, sep = '_')
       fitted = data.table::as.data.table(fitted)
       data.table::setnames(fitted, new_feature_name)
       return(fitted)
@@ -144,7 +148,8 @@ PipeOpSpatialLag = R6::R6Class(
         y = task$data(),
         k = self$param_set$values$k,
         weight_func = self$param_set$values$kernel,
-        type = task$task_type
+        type = task$task_type,
+        prefix = self$param_set$values$prefix
       )
 
       return(output_task$cbind(new_x))

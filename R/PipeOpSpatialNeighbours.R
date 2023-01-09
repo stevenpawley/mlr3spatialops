@@ -31,13 +31,21 @@ PipeOpSpatialNeighbours = R6::R6Class(
     #' @param param_vals named list of hyperparameters.
     #' @return A new `PipeOpSpatialNeighbours` object.
     initialize =
-      function(id = 'neighbours', param_vals = list(k = 5)) {
-        ps = paradox::ParamSet$new(params = list(paradox::ParamInt$new(
-          id = 'k',
-          default = 5,
-          lower = 1,
-          tags = c('train', 'k')
-        )))
+      function(id = 'neighbours', param_vals = list(k = 5, prefix = 'nn')) {
+        ps = paradox::ParamSet$new(
+          params = list(
+            paradox::ParamInt$new(
+              id = 'k',
+              default = 5,
+              lower = 1,
+              tags = c('train', 'k')
+            ),
+            paradox::ParamUty$new(
+              id = 'prefix',
+              default = 'nn'
+            )
+          )
+        )
 
       super$initialize(
         id,
@@ -56,7 +64,8 @@ PipeOpSpatialNeighbours = R6::R6Class(
       list(training_task = task$clone())
     },
 
-    get_neighbours = function(target_name, feature_names, train, query, k = 5) {
+    get_neighbours = function(target_name, feature_names, train, query, k = 5,
+                              prefix) {
       train_X = train[, feature_names]
       query_X = query[, feature_names]
 
@@ -75,11 +84,12 @@ PipeOpSpatialNeighbours = R6::R6Class(
       nn_target_values = matrix(nn_target_values, ncol = k)
 
       # return as data.table
-      prefix = paste('nn', target_name, sep = '_')
-      prefix_dist = paste('dist', target_name, sep = '_')
+      prefix = paste(prefix, target_name, sep = '_')
+      prefix_dist = paste(prefix, 'dist', target_name, sep = '_')
 
       colnames(nn_target_values) =
         paste(prefix, seq_len(ncol(nn_target_values)), sep = '_')
+
       colnames(dists) =
         paste(prefix_dist, seq_len(ncol(dists)), sep = '_')
 
@@ -95,7 +105,8 @@ PipeOpSpatialNeighbours = R6::R6Class(
         feature_names = task$feature_names,
         train = self$state$training_task$data(),
         query = task$data(),
-        k = self$param_set$values$k
+        k = self$param_set$values$k,
+        prefix = self$param_set$values$prefix
       )
 
       task$cbind(new_x)

@@ -85,7 +85,7 @@ PipeOpSpatialDistCluster3D = R6::R6Class(
       )
 
       dist_vals = private$geo_dist_3d_calc(
-        df = task$data()[, cols],
+        x = task$data()[, cols],
         a = self$state$ref_lat,
         b = self$state$ref_lon,
         c = self$state$ref_depth

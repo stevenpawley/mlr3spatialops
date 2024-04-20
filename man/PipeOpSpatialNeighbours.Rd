@@ -50,7 +50,10 @@ pop$predict(list(task))$output$data()
 \subsection{Method \code{new()}}{
 Create a new PipeOpSpatialNeighbours object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PipeOpSpatialNeighbours$new(id = "neighbours", param_vals = list(k = 5))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PipeOpSpatialNeighbours$new(
+  id = "neighbours",
+  param_vals = list(k = 5, prefix = "nn")
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

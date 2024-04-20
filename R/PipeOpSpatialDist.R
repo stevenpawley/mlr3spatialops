@@ -6,7 +6,6 @@
 #' @return a `PipeOpSpatialDist` R6 class object
 #' @export
 #' @examples
-#' library(ggplot2)
 #' library(data.table)
 #' library(mlr3)
 #' library(mlr3pipelines)
@@ -27,10 +26,6 @@
 #' pop$train(list(task))
 #' result = pop$predict(list(task))
 #' result = result$output$data()
-#'
-#' ggplot(result, aes(x = x, y = y, fill = geodist2)) +
-#'   geom_raster() +
-#'   scale_fill_viridis_c(option = "turbo")
 PipeOpSpatialDist = R6::R6Class(
   "PipeOpSpatialDist",
   inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
@@ -43,7 +38,7 @@ PipeOpSpatialDist = R6::R6Class(
     #' @param param_vals named list of hyperparameters.
     #' @return A new `PipeOpSpatialDist3D` object.
     initialize =
-      function(id = "geodist3d",
+      function(id = "geodist",
                param_vals = list(prefix = "geodist", minimum = TRUE)) {
         ps = paradox::ParamSet$new(
           params = list(
@@ -61,19 +56,23 @@ PipeOpSpatialDist = R6::R6Class(
             ),
             paradox::ParamUty$new(
               id = "ref_xs",
-              tags = c("train", "predict", "required")
+              tags = c("train", "predict", "required"),
+              default = NULL
             ),
             paradox::ParamUty$new(
               id = "ref_ys",
-              tags = c("train", "predict", "required")
+              tags = c("train", "predict", "required"),
+              default = NULL
             ),
             paradox::ParamUty$new(
               id = "ref_zs",
-              tags = c("train", "predict", "required")
+              tags = c("train", "predict", "required"),
+              default = NULL
             ),
             paradox::ParamInt$new(
               id = "k",
-              tags = c("train", "predict", "required")
+              tags = c("train", "predict", "required"),
+              default = NULL
             ),
             paradox::ParamLgl$new(
               id = "minimum",

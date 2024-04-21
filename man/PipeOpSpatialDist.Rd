@@ -10,7 +10,6 @@ a `PipeOpSpatialDist` R6 class object
 Adds new variables based on the 3D Euclidean distances to reference locations.
 }
 \examples{
-library(ggplot2)
 library(data.table)
 library(mlr3)
 library(mlr3pipelines)
@@ -30,11 +29,7 @@ pop$param_set$values$minimum = FALSE
 
 pop$train(list(task))
 result = pop$predict(list(task))
-result = result$output$data()
-
-ggplot(result, aes(x = x, y = y, fill = geodist2)) +
-  geom_raster() +
-  scale_fill_viridis_c(option = "turbo")
+result$output$data()
 }
 \section{Super classes}{
 \code{\link[mlr3pipelines:PipeOp]{mlr3pipelines::PipeOp}} -> \code{\link[mlr3pipelines:PipeOpTaskPreproc]{mlr3pipelines::PipeOpTaskPreproc}} -> \code{\link[mlr3pipelines:PipeOpTaskPreprocSimple]{mlr3pipelines::PipeOpTaskPreprocSimple}} -> \code{PipeOpSpatialDist}
@@ -63,8 +58,8 @@ ggplot(result, aes(x = x, y = y, fill = geodist2)) +
 Create a new PipeOpSpatialDist3D object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PipeOpSpatialDist$new(
-  id = "geodist3d",
-  param_vals = list(prefix = "geodist", minimum = TRUE)
+  id = "geodist",
+  param_vals = list(prefix = "geodist", minimum = FALSE)
 )}\if{html}{\out{</div>}}
 }
 

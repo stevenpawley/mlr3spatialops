@@ -129,7 +129,7 @@ PipeOpSpatialLag = R6::R6Class(
         fitted = factor(fitted, levels = levels(x[[target_name]]))
       }
 
-      new_feature_name = paste(paste0(prefix, k), weight_func, sep = '_')
+      new_feature_name = paste(target_name, paste0(prefix, k), weight_func, sep = '_')
       fitted = data.table::as.data.table(fitted)
       data.table::setnames(fitted, new_feature_name)
       return(fitted)

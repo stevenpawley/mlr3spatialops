@@ -12,10 +12,10 @@ test_that("PipeOpSpatialLag basics", {
   expect_equal(pop$param_set$values$kernel, 'inv')
 
   res = pop$train(list(task))$output
-  expect_true("medv_lag_7_inv" %in% names(res$data()))
+  expect_true("cmedv_lag7_inv" %in% names(res$data()))
 
   preds = pop$predict(list(task))$output$data()
-  expect_true("medv_lag_7_inv" %in% names(preds))
+  expect_true("cmedv_lag7_inv" %in% names(preds))
 
   expect_error({pop$param_set$values$k = 1}, regexp = NULL)
   expect_error({pop$param_set$values$k = -1}, regexp = NULL)

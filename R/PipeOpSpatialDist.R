@@ -25,7 +25,7 @@
 #'
 #' pop$train(list(task))
 #' result = pop$predict(list(task))
-#' result = result$output$data()
+#' result$output$data()
 PipeOpSpatialDist = R6::R6Class(
   "PipeOpSpatialDist",
   inherit = mlr3pipelines::PipeOpTaskPreprocSimple,

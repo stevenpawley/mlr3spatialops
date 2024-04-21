@@ -39,7 +39,7 @@ PipeOpSpatialDist = R6::R6Class(
     #' @return A new `PipeOpSpatialDist3D` object.
     initialize =
       function(id = "geodist",
-               param_vals = list(prefix = "geodist", minimum = FALSE, k = NULL)) {
+               param_vals = list(prefix = "geodist", minimum = FALSE)) {
         ps = paradox::ParamSet$new(
           params = list(
             paradox::ParamUty$new(
@@ -72,7 +72,7 @@ PipeOpSpatialDist = R6::R6Class(
             paradox::ParamInt$new(
               id = "k",
               tags = c("train", "predict", "required"),
-              default = NULL
+              default = NA_integer_
             ),
             paradox::ParamLgl$new(
               id = "minimum",

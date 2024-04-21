@@ -91,7 +91,7 @@ PipeOpSpatialDist = R6::R6Class(
         self$param_set$values$xcolname,
         self$param_set$values$zcolname
       )
-      data = task$data()[, cols]
+      data = task$data()[, .SD, .SDcols = cols]
 
       # create matrix of reference locations (kmeans or user-defined)
       if ("k" %in% names(self$param_set$values)) {
@@ -118,7 +118,7 @@ PipeOpSpatialDist = R6::R6Class(
     },
 
     .transform = function(task) {
-      data = task$data()[, self$state$cols]
+      data = task$data()[, .SD, .SDcols = self$state$cols]
 
       if (isFALSE(self$param_set$values$minimum)) {
         dist_vals = apply(self$state$refs, 1, function(ref, data) {

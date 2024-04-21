@@ -38,50 +38,35 @@ PipeOpSpatialDist = R6::R6Class(
     #' @param param_vals named list of hyperparameters.
     #' @return A new `PipeOpSpatialDist3D` object.
     initialize =
-      function(id = "geodist", param_vals = list(prefix = "geodist")) {
+      function(id = "geodist", param_vals = list(prefix = "geodist", minimum = FALSE)) {
         ps = paradox::ParamSet$new(
           params = list(
             paradox::ParamUty$new(
-              id = "xcolname",
-              tags = c("train", "predict", "required")
+              id = "xcolname", tags = c("train", "predict", "required")
             ),
             paradox::ParamUty$new(
-              id = "ycolname",
-              tags = c("train", "predict", "required")
+              id = "ycolname", tags = c("train", "predict", "required")
             ),
             paradox::ParamUty$new(
-              id = "zcolname",
-              tags = c("train", "predict", "required")
+              id = "zcolname", tags = c("train", "predict")
             ),
             paradox::ParamUty$new(
-              id = "ref_xs",
-              tags = c("train", "predict", "required"),
-              default = NULL
+              id = "ref_xs", tags = c("train", "predict")
             ),
             paradox::ParamUty$new(
-              id = "ref_ys",
-              tags = c("train", "predict", "required"),
-              default = NULL
+              id = "ref_ys", tags = c("train", "predict")
             ),
             paradox::ParamUty$new(
-              id = "ref_zs",
-              tags = c("train", "predict", "required"),
-              default = NULL
+              id = "ref_zs", tags = c("train", "predict")
             ),
             paradox::ParamInt$new(
-              id = "k",
-              tags = c("train", "predict", "required"),
-              default = 5
+              id = "k", default = 5, tags = c("train", "predict")
             ),
             paradox::ParamLgl$new(
-              id = "minimum",
-              tags = c("train", "predict", "required"),
-              default = FALSE
+              id = "minimum", default = FALSE, tags = c("train", "predict")
             ),
             paradox::ParamUty$new(
-              id = "prefix",
-              tags = c("train", "predict"),
-              default = "geodist"
+              id = "prefix", default = "geodist", tags = c("train", "predict")
             )
           )
         )
@@ -100,8 +85,7 @@ PipeOpSpatialDist = R6::R6Class(
       apply(a, 1, function(a) dist(rbind(a, b)))
     },
 
-    .transform = function(task) {
-      # get reference spatial column names and subset associated features
+    .get_state = function(task) {
       cols = c(
         self$param_set$values$ycolname,
         self$param_set$values$xcolname,
@@ -111,10 +95,10 @@ PipeOpSpatialDist = R6::R6Class(
 
       # create matrix of reference locations (kmeans or user-defined)
       if ("k" %in% names(self$param_set$values)) {
-        km = kmeans(data, centers = self$param_set$values$k)
-        ref_locations = data.table::as.data.table(km$centers)
+        km = stats::kmeans(data, centers = self$param_set$values$k)
+        refs = data.table::as.data.table(km$centers)
       } else {
-        ref_locations = cbind(
+        refs = cbind(
           self$param_set$values$ref_ys,
           self$param_set$values$ref_xs,
           self$param_set$values$ref_zs
@@ -122,26 +106,33 @@ PipeOpSpatialDist = R6::R6Class(
       }
 
       # some checks
-      if (is.null(ref_locations)) {
-        stop("No reference locations provided and `k` is not set to create reference locations using kmeans clusters.")
+      if (is.null(refs)) {
+        stop("No reference locations provided and `k` is not set.")
       }
 
-      if (ncol(ref_locations) != ncol(data)) {
+      if (ncol(refs) != ncol(data)) {
         stop("Reference columns refer to columns not present in the data.")
       }
 
+      list(cols = cols, refs = refs)
+    },
+
+    .transform = function(task) {
+      data = task$data()[, self$state$cols]
+
       if (isFALSE(self$param_set$values$minimum)) {
-        dist_vals = apply(ref_locations, 1, function(ref, data) {
+        dist_vals = apply(self$state$refs, 1, function(ref, data) {
           private$geodist(data, ref)
         }, data = data)
 
       } else {
         dist_vals = nabor::knn(
-          data = as.matrix(ref_locations),
-          query = as.matrix(task$data()[, cols]),
+          data = as.matrix(self$state$refs),
+          query = as.matrix(data),
           k = 1
         )$nn.dists
       }
+
       dist_vals = data.table::as.data.table(dist_vals)
       data.table::setnames(
         dist_vals,

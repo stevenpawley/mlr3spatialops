@@ -23,9 +23,7 @@
 PipeOpSpatialLag = R6::R6Class(
   classname = 'PipeOpSpatialLag',
   inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
-
   public = list(
-
     #' @description
     #' Create a new PipeOpSpatialLag object.
     #' @param id character, identifier for the class instance.
@@ -33,28 +31,16 @@ PipeOpSpatialLag = R6::R6Class(
     #' @return A new `PipeOpSpatialLag` object.
     initialize =
       function(id = 'lag', param_vals = list()) {
-        ps = paradox::ParamSet$new(params = list(
-          paradox::ParamInt$new(
-            id = 'k',
-            default = 5,
-            lower = 3,
-            upper = Inf,
-            tags = 'train'
-          ),
-          paradox::ParamFct$new(
-            id = 'kernel',
-            default = 'inv',
+        ps = paradox::ps(
+          k = paradox::p_int(default = 5, lower = 3, upper = Inf, tags = "train"),
+          kernel = paradox::p_fct(
+            default = "inv",
             levels = c('inv', 'rectangular', 'gaussian'),
             tags = 'train'
           ),
-          paradox::ParamUty$new(
-            id = 'prefix',
-            default = 'lag'
-          )
-        ))
-
+          prefix = paradox::p_uty(default = "lag")
+        )
         ps$values = list(k = 5, kernel = 'inv', prefix = 'lag')
-
         super$initialize(
           id,
           param_set = ps,
@@ -69,7 +55,6 @@ PipeOpSpatialLag = R6::R6Class(
     .get_state = function(task) {
       list(training_task = task$clone())
     },
-
     gaussian_kernel = function(distances, k) {
       # standardize distances and add small constant to avoid zero distances
       maxdist = distances[, k]

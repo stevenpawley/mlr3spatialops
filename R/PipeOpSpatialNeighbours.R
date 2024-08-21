@@ -24,7 +24,6 @@ PipeOpSpatialNeighbours = R6::R6Class(
   'PipeOpSpatialNeighbours',
   inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
   public = list(
-
     #' @description
     #' Create a new PipeOpSpatialNeighbours object.
     #' @param id character, identifier for the class instance.
@@ -32,29 +31,18 @@ PipeOpSpatialNeighbours = R6::R6Class(
     #' @return A new `PipeOpSpatialNeighbours` object.
     initialize =
       function(id = 'neighbours', param_vals = list(k = 5, prefix = 'nn')) {
-        ps = paradox::ParamSet$new(
-          params = list(
-            paradox::ParamInt$new(
-              id = 'k',
-              default = 5,
-              lower = 1,
-              tags = c('train', 'k')
-            ),
-            paradox::ParamUty$new(
-              id = 'prefix',
-              default = 'nn'
-            )
-          )
+        ps = paradox::ps(
+          k = paradox::p_int(default = 5, lower = 1, tags = c("train", "k")),
+          prefix = paradox::p_uty(default = "nn")
         )
-
-      super$initialize(
-        id,
-        param_set = ps,
-        param_vals = param_vals,
-        packages = 'nabor',
-        feature_types = c('numeric', 'integer')
-      )
-    }
+        super$initialize(
+          id,
+          param_set = ps,
+          param_vals = param_vals,
+          packages = 'nabor',
+          feature_types = c('numeric', 'integer')
+        )
+      }
   ),
 
   private = list(

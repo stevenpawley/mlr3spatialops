@@ -29,9 +29,7 @@
 PipeOpSpatialDist = R6::R6Class(
   "PipeOpSpatialDist",
   inherit = mlr3pipelines::PipeOpTaskPreprocSimple,
-
   public = list(
-
     #' @description
     #' Create a new PipeOpSpatialDist3D object.
     #' @param id character, identifier for the class instance.
@@ -39,38 +37,17 @@ PipeOpSpatialDist = R6::R6Class(
     #' @return A new `PipeOpSpatialDist3D` object.
     initialize =
       function(id = "geodist", param_vals = list(prefix = "geodist", minimum = FALSE)) {
-        ps = paradox::ParamSet$new(
-          params = list(
-            paradox::ParamUty$new(
-              id = "xcolname", tags = c("train", "predict", "required")
-            ),
-            paradox::ParamUty$new(
-              id = "ycolname", tags = c("train", "predict", "required")
-            ),
-            paradox::ParamUty$new(
-              id = "zcolname", tags = c("train", "predict")
-            ),
-            paradox::ParamUty$new(
-              id = "ref_xs", tags = c("train", "predict")
-            ),
-            paradox::ParamUty$new(
-              id = "ref_ys", tags = c("train", "predict")
-            ),
-            paradox::ParamUty$new(
-              id = "ref_zs", tags = c("train", "predict")
-            ),
-            paradox::ParamInt$new(
-              id = "k", default = 5, tags = c("train", "predict")
-            ),
-            paradox::ParamLgl$new(
-              id = "minimum", default = FALSE, tags = c("train", "predict")
-            ),
-            paradox::ParamUty$new(
-              id = "prefix", default = "geodist", tags = c("train", "predict")
-            )
-          )
+        ps = paradox::ps(
+          xcolname = paradox::p_uty(tags = c("train", "predict", "required")),
+          ycolname = paradox::p_uty(tags = c("train", "predict", "required")),
+          zcolname = paradox::p_uty(tags = c("train", "predict")),
+          ref_xs = paradox::p_uty(tags = c("train", "predict")),
+          ref_ys = paradox::p_uty(tags = c("train", "predict")),
+          ref_zs = paradox::p_uty(tags = c("train", "predict")),
+          k = paradox::p_int(tags = c("train", "predict"), default = 5),
+          minimum = paradox::p_lgl(default = FALSE, tags = c("train", "predict")),
+          prefix = paradox::p_uty(default = "geodist", tags = c("train", "predict"))
         )
-
         super$initialize(
           id,
           param_set = ps,
